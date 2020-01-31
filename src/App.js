@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Hoby from './Hoby';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor( props ){
+    super ( props )
+    this.state = {
+      nombre : "Alfredo",
+      apellido : "Salazar"
+    }
+  }
+
+  render(){
+    let accion = "Programar";
+    return (
+      <div>
+        Hola de nuevo {this.state.nombre} {this.state.apellido}
+        <div>
+          <Hoby accion="Dar clases" test={1}/>
+          <Hoby accion={accion} test={2}/>
+          <Hoby accion="Escuchar musica" test={3}/>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default App;
