@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 import Hoby from './Hoby';
+import NuevoHoby from './NuevoHoby';
+import Students from './Students';
+import {BrowserRouter, Route, Link} from 'react-router-dom';
 
 class App extends React.Component {
 
@@ -8,21 +11,83 @@ class App extends React.Component {
     super ( props )
     this.state = {
       nombre : "Alfredo",
-      apellido : "Salazar"
+      apellido : "Salazar",
+      hobbies : [{
+        nombre : "Programar"
+      },
+      {
+        nombre : "Dar clases"
+      },
+      {
+        nombre : "Escuchar musica"
+      },
+      {
+        nombre : "Ver peliculas" 
+      }],
+      students : [],
+      apiURL : "http://localhost:8080"
     }
+
+   // this.agregaHoby = this.agregaHoby.bind(this);
+  }
+
+  agregaHoby = (hoby) => {
+
+    let listaNueva = [...this.state.hobbies, hoby];
+
+    //listaNueva.push(hoby);
+
+    this.setState({
+      hobbies : listaNueva
+    });
+  }
+
+  componentDidMount(){
+
+    let url = `${this.state.apiURL}/api/students`;
+    let settings = {
+      method : 'GET'
+    }
+    
+    fetch( url, settings )
+      .then( response => {
+        if( response.ok ){
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then( responseJSON => {
+        this.setState({
+          students : responseJSON
+        })
+      })
+      .catch( err => {
+        console.log(err);
+      });
+
   }
 
   render(){
-    let accion = "Programar";
     return (
-      <div>
-        Hola de nuevo {this.state.nombre} {this.state.apellido}
+      <BrowserRouter>
+        <nav>
+          <Link to='/'> Home </Link>
+          <Link to='/students'> Students </Link>
+        </nav>
+        <Route path='/students' render={(props) => <Students lista={this.state.students} />} />
         <div>
-          <Hoby accion="Dar clases" test={1}/>
-          <Hoby accion={accion} test={2}/>
-          <Hoby accion="Escuchar musica" test={3}/>
+          Hola de nuevo {this.state.nombre} {this.state.apellido}
+          
+          <NuevoHoby agregaHoby={this.agregaHoby}/>
+          <div>
+            {this.state.hobbies.map( (hoby, index) => {
+              return (
+                <Hoby accion={hoby.nombre} test={index} />
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </BrowserRouter>
     )
   }
 }
